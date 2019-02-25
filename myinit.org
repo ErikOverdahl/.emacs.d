@@ -1,0 +1,532 @@
+#+TITLE:Emacs Configuration
+
+
+
+* Future changes
+*** TODO Dashboard
+*** TODO Alerts
+*** TODO Look into [[https://github.com/bbatsov/projectile][Projectile]] for project management
+***** TODO Use git to manage projects
+***** TODO change startup page to show projects
+*** TODO Smartparens
+*** TODO better modeline
+*** TODO configure Python/ipython dev environment
+*** Org upgrades
+***** TODO [#A] Long-term tracking of goals and projects
+***** TODO [#B] Agenda views
+      - appearance
+      - search options
+***** TODO [#B] managing bookmarks/links
+***** TODO change to use-package in the org-mode section
+*** DONE different fonts
+
+
+* Example init files
+[[https://github.com/zamansky/using-emacs/blob/master/myinit.org][the guy who made the Using Emacs series, Zamansky]]
+[[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua]]
+[[http://doc.norang.ca/org-mode.html][Bernt Hansen's config]]
+[[https://github.com/zzamboni/dot-emacs/blob/master/init.org][ZZamboni, who makes org-mode look nice]]
+
+
+* Global Settings
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-startup-message t)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(setq display-time-day-and-date 1)
+(display-time-mode 1)
+
+
+
+(fset 'yes-or-no-p 'y-or-n-p)
+(global-set-key (kbd "<f5>") 'revert-buffer)
+
+(defalias 'list-buffers 'ibuffer)
+#+END_SRC
+
+
+
+* Packages
+  [[https://github.com/jwiegley/use-package][Use-package]] bootstrapped in init.el
+*** [[https://github.com/justbur/emacs-which-key][Which-key]]
+ #+BEGIN_SRC emacs-lisp
+ (use-package which-key
+   :ensure t
+   :config
+   (which-key-mode))
+ #+END_SRC
+*** [[https://github.com/larstvei/Try][Try]]
+    Try packages without fully installing
+ #+BEGIN_SRC emacs-lisp
+   (use-package try
+     :ensure t)
+ #+END_SRC
+*** [[https://github.com/abo-abo/ace-window][Ace-window]]
+ #+BEGIN_SRC emacs-lisp
+ (use-package ace-window
+   :ensure t)
+ (global-set-key (kbd "M-o") 'ace-window)
+ #+END_SRC
+*** [[https://github.com/victorhge/iedit][iedit]]
+    Used for editing multiple regions simultaneously
+ #+BEGIN_SRC emacs-lisp
+ (use-package iedit
+   :ensure t)
+ #+END_SRC
+
+*** [[https://github.com/politza/pdf-tools][PDF-tools]]
+[[https://babbagefiles.blogspot.com/2017/11/more-pdf-tools-tricks.html][Some PDF-Tools tips and tricks!]]
+ #+BEGIN_SRC emacs-lisp
+   (use-package pdf-tools
+       :ensure t
+       :config
+       (pdf-tools-install))
+   (use-package org-pdfview
+       :ensure t)
+
+   (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; set the amber profile as default (see below)
+
+   (defun fr/pdf-no-filter ()
+     "View pdf without colour filter."
+     (interactive)
+     (pdf-view-midnight-minor-mode -1)
+     )
+
+   (defun fr/pdf-midnite-amber ()
+     "Set pdf-view-midnight-colors to amber on dark slate blue."
+     (interactive)
+     (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; amber
+     ;;  (setq pdf-annot-default-markup-annotation-properties "#ff0000")
+     ;;  (setq pdf-annot-default-text-annotation-properties "#ff0000")
+     (pdf-view-midnight-minor-mode)
+     )
+
+   ;; midnite mode hook
+    (add-hook 'pdf-view-mode-hook (lambda ()
+				    (pdf-view-midnight-minor-mode))) ; automatically turns on midnight-mode for pdfs
+
+     ;;(require 'pdf-tools)
+     ;;(require 'org-pdfview)
+ #+END_SRC
+*** [[https://github.com/Fanael/rainbow-delimiters][Rainbow-delimiters]]
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-delimiters
+    :ensure t
+    )
+
+#+END_SRC
+*** [[https://github.com/Fuco1/smartparens][Smartparens]]
+    [[https://gist.github.com/pvik/8eb5755cc34da0226e3fc23a320a3c95][SmartParens cheatsheet]]
+#+BEGIN_SRC emacs-lisp
+  (use-package smartparens
+      :ensure t
+      :config
+      (use-package smartparens-config)
+      (use-package smartparens-html)
+      (use-package smartparens-python)
+      (use-package smartparens-latex)
+      (smartparens-global-mode t)
+      (show-smartparens-global-mode t))
+#+END_SRC
+
+*** TODO [[https://github.com/abo-abo/swiper][Counsel, Ivy, and Swiper]]
+    Using the config example from Zamansky
+ #+BEGIN_SRC emacs-lisp
+   (use-package counsel
+     :ensure t
+     :bind
+     (("M-y" . counsel-yank-pop)
+      :map ivy-minibuffer-map
+      ("M-y" . ivy-next-line)))
+ #+END_SRC
+
+ #+BEGIN_SRC emacs-lisp
+  (use-package ivy
+     :ensure t
+     :diminish (ivy-mode)
+     :bind (("C-x b" . ivy-switch-buffer))
+     :config
+     (ivy-mode 1)
+     (setq ivy-use-virtual-buffers t)
+     (setq ivy-count-format "%d/%d ")
+     (setq ivy-display-style 'fancy))
+ #+END_SRC
+ #+BEGIN_SRC emacs-lisp
+   (use-package swiper
+     :ensure t
+     :bind (("C-s" . swiper)
+	    ("C-r" . swiper)
+	    ("C-c C-r" . ivy-resume)
+	    ("M-x" . counsel-M-x)
+	    ("C-x C-f" . counsel-find-file))
+     :config
+     (progn
+       (ivy-mode 1)
+       (setq ivy-use-virtual-buffers t)
+       (setq ivy-display-style 'fancy)
+       (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+       ))
+
+ #+END_SRC
+
+*** TODO [[https://github.com/jwiegley/alert][Alerts]]
+    For getting notifications from Emacs
+
+*** [[https://magit.vc/][Magit]]
+    "A Git Porcelain Inside Emacs"
+ #+BEGIN_SRC emacs-lisp
+   (use-package magit
+     :ensure t
+     :init
+     (progn
+     (bind-key "C-x g" 'magit-status)
+     ))
+ #+END_SRC
+*** TODO [[https://github.com/bbatsov/projectile][Projectile]]
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :ensure t
+    :bind
+    ("C-c p" . projectile-command-map)
+    :config
+    (projectile-global-mode)
+    (setq projectile-completion-mode 'ivy))
+#+END_SRC
+
+#+RESULTS:
+: projectile-command-map
+*** TODO [[https://github.com/emacs-dashboard/emacs-dashboard][Dashboard]]
+#+BEGIN_SRC emacs-lisp
+  (use-package dashboard
+    :ensure t
+    :config
+    (dashboard-setup-startup-hook))
+#+END_SRC
+*** TODO [[https://github.com/jorgenschaefer/elpy][Elpy]]
+    Python dev environment for Emacs
+    Documentation [[https://elpy.readthedocs.io/en/latest/][here]].
+ #+BEGIN_SRC emacs-lisp
+   (use-package elpy
+     :ensure t
+     :config
+     (elpy-enable))
+ #+END_SRC
+*** TODO [[https://github.com/gregsexton/ob-ipython][ob-ipython]]
+    Support for ipython in Org-mode
+    [[https://vxlabs.com/tag/ob-ipython/][More useful info at VXlabs]]
+#+BEGIN_SRC emacs-lisp
+  (use-package ob-ipython
+    :ensure t
+    :config
+    (add-hook 'ob-ipython-mode-hookp
+	      (lambda ()
+		(elpy-mode 0)
+		(company-mode 1)))
+    (add-to-list 'company-backends 'company-ob-ipython)
+    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
+    )
+#+END_SRC
+
+#+RESULTS:
+: t
+
+*** TODO [[https://github.com/yuya373/emacs-slack][Slack]]
+ #+BEGIN_SRC emacs-lisp
+   ;; (use-package slack
+   ;;   :commands (slack-start)
+   ;;   :init
+   ;;   (setq slack-buffer-emojify t) ;; if you want to enable emoji, default nil
+   ;;   (setq slack-prefer-current-team t)
+   ;;   :config
+   ;;   (slack-register-team
+   ;;    :name "MML"
+   ;;    :default t
+   ;;    :client-id "33430456118.538230002336"
+   ;;    :client-secret "8f55e04155dba92bbc25bc5cf9cbb7be"
+   ;;    :token "xoxp-33430456118-417790142484-538275360384-0897144b7622bf41fcdccfec2e834a56"
+   ;;    :subscribed-channels '(general random g2deep python-chatter enricher)
+   ;;    :full-and-display-names t)
+   ;;   )
+
+ #+END_SRC
+
+*** TODO Theme
+***** [[https://github.com/Greduan/emacs-theme-gruvbox][Gruvbox theme]]
+Found in [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][this article]]
+#+BEGIN_SRC emacs-lisp
+  (use-package gruvbox-theme
+    :ensure t
+    :config
+    (load-theme 'gruvbox-dark-hard t))
+
+#+END_SRC
+***** [[https://github.com/kunalb/poet/blob/master/poet-dark-theme.el][Poet Dark]] with font size modified so it will scale
+    #+BEGIN_SRC emacs-lisp
+      ;; (set-face-attribute 'default nil :family "DejaVu Serif")
+      ;;   (set-face-attribute 'fixed-pitch nil :family "DejaVu Sans Mono")
+      ;;   (set-face-attribute 'variable-pitch nil :family "DejaVu Serif")
+      ;; (variable-pitch-mode t)
+      ;; (use-package poet-theme
+      ;;     :ensure t
+      ;;     :config
+      ;;     (load-theme 'poet-dark t)
+      ;;     )
+      ;;   ;;(load-theme 'poet-dark t)
+#+END_SRC
+*** [[https://github.com/rnkn/olivetti][Olivetti mode]]
+#+BEGIN_SRC emacs-lisp
+  (use-package olivetti
+    :ensure t
+)
+ #+END_SRC
+
+ #+RESULTS:
+ : Text body width set to 100
+
+*** Line wrapping
+ #+BEGIN_SRC emacs-lisp
+ (use-package adaptive-wrap
+ :ensure t
+ :init
+ (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode)
+ :config
+ (setq-default adaptive-wrap-extra-indent 2)
+ )
+ (global-visual-line-mode +1)
+ #+END_SRC
+
+ 
+* Org Mode
+  [[https://orgmode.org/manual/][The Org Manual]]
+  [[https://github.com/zzamboni/dot-emacs/blob/master/init.org][Advice on making Org-mode look good for writing]]
+*** Fonts and sizes
+#+BEGIN_SRC emacs-lisp
+  ;; (let* ((variable-tuple
+  ;;        (cond ((x-list-fonts   "Source Sans Pro") '(:font   "Source Sans Pro"))
+  ;; 	     ((x-list-fonts   "Lucida Grande")   '(:font   "Lucida Grande"))
+  ;; 	     ((x-family-fonts "Liberation Serif") '(:family "Liberation Serif"))
+  ;; 	     ((x-list-fonts   "Verdana")         '(:font   "Verdana"))
+  ;; 	     ((x-family-fonts "Sans Serif")      '(:family "Sans Serif"))
+  ;; 	     (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
+  ;;        (base-font-color (face-foreground 'default nil 'default))
+  ;;        (headline       `(:inherit default :weight bold :foreground ,base-font-color)))
+
+  ;;   (custom-theme-set-faces
+  ;;    'user
+  ;;    `(org-level-8        ((t (,@headline ,@variable-tuple))))
+  ;;    `(org-level-7        ((t (,@headline ,@variable-tuple))))
+  ;;    `(org-level-6        ((t (,@headline ,@variable-tuple))))
+  ;;    `(org-level-5        ((t (,@headline ,@variable-tuple))))
+  ;;    `(org-level-4        ((t (,@headline ,@variable-tuple :height 1.1))))
+  ;;    `(org-level-3        ((t (,@headline ,@variable-tuple :height 1.25))))
+  ;;    `(org-level-2        ((t (,@headline ,@variable-tuple :height 1.25))))
+  ;;    `(org-level-1        ((t (,@headline ,@variable-tuple :height 1.25))))
+  ;;    `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline t))))
+  ;;    '(org-block                 ((t (:inherit fixed-pitch))))
+  ;;    '(org-document-info         ((t (:inherit fixed-pitch :foreground "dark orange"))))
+  ;;    '(org-document-info-keyword ((t (:inherit fixed-pitch))))
+  ;;    '(org-link                  ((t (:foreground "royal blue" :underline t))))
+  ;;    '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+  ;;    '(org-property-value        ((t (:inherit fixed-pitch))) t)
+  ;;    '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+  ;;    '(org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+  ;;    '(org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
+  ;;    )
+  ;; )
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (custom-theme-set-faces
+     'user
+     `(org-level-8        ((t (:inherit default :weight bold :foreground "#f5f5f5"))))
+     `(org-level-7        ((t (:inherit default :weight bold :foreground "#f5f5f5"))))
+     `(org-level-6        ((t (:inherit default :weight bold :foreground "#f5f5f5"))))
+     `(org-level-5        ((t (:inherit default :weight bold :foreground "#f5f5f5"))))
+     `(org-level-4        ((t (:inherit default :weight bold :height 1.125 :foreground "#f5f5f5"))))
+     `(org-level-3        ((t (:inherit default :weight bold :height 1.25 :foreground "#f5f5f5"))))
+     `(org-level-2        ((t (:inherit default :weight bold :height 1.375 :foreground "#f5f5f5"))))
+     `(org-level-1        ((t (:inherit default :weight bold :height 1.5 :foreground "#f5f5f5"))))
+     `(org-document-title ((t (:inherit default :weight bold :height 2.0 :underline t :foreground "#f5f5f5"))))
+     '(org-block                 ((t (:inherit fixed-pitch))))
+     '(org-document-info         ((t (:inherit fixed-pitch :foreground "dark orange"))))
+     '(org-document-info-keyword ((t (:inherit fixed-pitch))))
+     '(org-link                  ((t (:foreground "royal blue" :underline t))))
+     '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+     '(org-property-value        ((t (:inherit fixed-pitch))) t)
+     '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+     '(org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+     '(org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
+     '(org-priority              ((t (:inherit fixed-pitch))))
+     '(org-todo                  ((t (:inherit fixed-pitch))))
+     '(org-done                  ((t (:inherit fixed-pitch))))
+     )
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC emacs-lisp
+  (set-face-attribute 'default nil :family "Office Code Pro" :foreground "#f5f5f5")
+  (set-face-attribute 'fixed-pitch nil :family "Office Code Pro")
+  (set-face-attribute 'variable-pitch nil :family "Liberation Serif" :height 130)
+  (add-hook 'org-mode-hook 'variable-pitch-mode)
+  (add-hook 'org-mode hook 'olivetti-mode)
+#+END_SRC
+
+[[https://ogbe.net/blog/toggle-serif.html][a mix of variable and fixed pitch fonts]]?
+#+BEGIN_SRC emacs-lisp
+  ;; (defvar serif-preserve-default-list nil
+  ;;   "A list holding the faces that preserve the default family and
+  ;;   height when TOGGLE-SERIF is used.")
+
+  ;; (setq serif-preserve-default-list
+  ;;       '(;; LaTeX markup
+  ;; 	font-latex-math-face
+  ;; 	font-latex-sedate-face
+  ;; 	font-latex-warning-face
+  ;; 	;; org markup
+  ;; 	org-latex-and-related
+  ;; 	org-meta-line
+  ;; 	org-verbatim
+  ;; 	org-block-begin-line
+  ;; 	;; syntax highlighting using font-lock
+  ;; 	font-lock-builtin-face
+  ;; 	font-lock-comment-delimiter-face
+  ;; 	font-lock-comment-face
+  ;; 	font-lock-constant-face
+  ;; 	font-lock-doc-face
+  ;; 	font-lock-function-name-face
+  ;; 	font-lock-keyword-face
+  ;; 	font-lock-negation-char-face
+  ;; 	font-lock-preprocessor-face
+  ;; 	font-lock-regexp-grouping-backslash
+  ;; 	font-lock-regexp-grouping-construct
+  ;; 	font-lock-string-face
+  ;; 	font-lock-type-face
+  ;; 	font-lock-variable-name-face
+  ;; 	font-lock-warning-face))
+
+  ;; (defun toggle-serif ()
+  ;;   "Change the default face of the current buffer to use a serif family."
+  ;;   (interactive)
+  ;;   (when (display-graphic-p)  ;; this is only for graphical emacs
+  ;;     ;; the serif font familiy and height, save the default attributes
+  ;;     (let ((serif-fam "Liberation Serif")
+  ;; 	  (serif-height 120)
+  ;; 	  (default-fam (face-attribute 'default :family))
+  ;; 	  (default-height (face-attribute 'default :height)))
+  ;;       (if (not (bound-and-true-p default-cookie))
+  ;; 	  (progn (make-local-variable 'default-cookie)
+  ;; 		 (make-local-variable 'preserve-default-cookies-list)
+  ;; 		 (setq preserve-default-cookies-list nil)
+  ;; 		 ;; remap default face to serif
+  ;; 		 (setq default-cookie
+  ;; 		       (face-remap-add-relative
+  ;; 			'default :family serif-fam :height serif-height))
+  ;; 		 ;; keep previously defined monospace fonts the same
+  ;; 		 (dolist (face serif-preserve-default-list)
+  ;; 		   (add-to-list 'preserve-default-cookies-list
+  ;; 				(face-remap-add-relative
+  ;; 				 face :family default-fam :height default-height)))
+  ;; 		 (message "Turned on serif writing font."))
+  ;; 	;; undo changes
+  ;; 	(progn (face-remap-remove-relative default-cookie)
+  ;; 	       (dolist (cookie preserve-default-cookies-list)
+  ;; 		 (face-remap-remove-relative cookie))
+  ;; 	       (setq default-cookie nil)
+  ;; 	       (setq preserve-default-cookies-list nil)
+  ;; 	       (message "Restored default fonts."))))))
+
+  ;; (add-hook 'org-mode-hook 'toggle-serif)
+#+END_SRC
+
+*** General settings
+ #+BEGIN_SRC emacs-lisp
+   (setq org-hide-leading-stars t)
+
+   (setq org-log-into-drawer t)
+
+   (setq org-display-inline-images t)
+   (setq org-redisplay-inline-images t)
+   (setq org-startup-with-inline-images "inlineimages")
+   
+ #+END_SRC
+
+*** [[https://github.com/sabof/org-bullets][Org-bullets]]
+ #+BEGIN_SRC emacs-lisp
+ (use-package org-bullets
+   :ensure t
+   :config
+   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+ (setq org-bullets-bullet-list
+         '("◉" "●" "○" "◦" "◦" "◦" "◦"))
+ (setq org-odd-levels-only t)
+ #+END_SRC
+
+ #+RESULTS:
+ : t
+
+*** Agenda settings
+    [[http://doc.norang.ca/org-mode.html#CustomAgendaViews][Good examples of custom agenda views]]
+ #+BEGIN_SRC emacs-lisp
+   (setq org-agenda-files (list "~/Dropbox/DropsyncFiles/Org/todo.org"))
+   (global-set-key (kbd "C-c a") 'org-agenda)
+ #+END_SRC
+
+ #+RESULTS:
+ : org-agenda
+
+ #+BEGIN_SRC emacs-lisp
+ (setq org-agenda-custom-commands
+       '(("N" "Next 3 days" agenda ""
+	  ((org-agenda-span 3)
+	   (org-agenda-entry-types '(:timestamp :scheduled)))
+	  )))
+ #+END_SRC
+*** Org-babel
+ #+BEGIN_SRC emacs-lisp
+   (setq exec-path (append exec-path '("/home/francis/Programs/anaconda3/bin")))
+
+   (org-babel-do-load-languages
+    'org-babel-load-languages
+    '((python . t)
+      (shell . t)
+      (emacs-lisp . t)
+      (ipython . t))
+    )
+ #+END_SRC
+
+ #+RESULTS:
+
+
+* Narrow or widen command
+#+BEGIN_SRC emacs-lisp
+; if you're windened, narrow to the region, if you're narrowed, widen
+; bound to C-x n
+(defun narrow-or-widen-dwim (p)
+  "If the buffer is narrowed, it widens. Otherwise, it narrows intelligently.
+Intelligently means: region, org-src-block, org-subtree, or defun,
+whichever applies first.
+Narrowing to org-src-block actually calls `org-edit-src-code'.
+
+With prefix P, don't widen, just narrow even if buffer is already
+narrowed."
+  (interactive "P")
+  (declare (interactive-only))
+  (cond ((and (buffer-narrowed-p) (not p)) (widen))
+	((region-active-p)
+	 (narrow-to-region (region-beginning) (region-end)))
+	((derived-mode-p 'org-mode)
+	 ;; `org-edit-src-code' is not a real narrowing command.
+	 ;; Remove this first conditional if you don't want it.
+	 (cond ((ignore-errors (org-edit-src-code))
+		(delete-other-windows))
+	       ((org-at-block-p)
+		(org-narrow-to-block))
+	       (t (org-narrow-to-subtree))))
+	(t (narrow-to-defun))))
+
+;; (define-key endless/toggle-map "n" #'narrow-or-widen-dwim)
+;; This line actually replaces Emacs' entire narrowing keymap, that's
+;; how much I like this command. Only copy it if that's what you want.
+(define-key ctl-x-map "n" #'narrow-or-widen-dwim)
+#+END_SRC
