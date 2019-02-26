@@ -4,11 +4,10 @@
 
 * Future changes
 *** TODO Dashboard
-*** TODO Alerts
 *** TODO Look into [[https://github.com/bbatsov/projectile][Projectile]] for project management
 ***** TODO Use git to manage projects
 ***** TODO change startup page to show projects
-*** TODO Smartparens
+*** TODO Alerts
 *** TODO better modeline
 *** TODO configure Python/ipython dev environment
 *** Org upgrades
@@ -18,6 +17,7 @@
       - search options
 ***** TODO [#B] managing bookmarks/links
 ***** TODO change to use-package in the org-mode section
+*** DONE Smartparens
 *** DONE different fonts
 
 
@@ -26,6 +26,41 @@
 [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua]]
 [[http://doc.norang.ca/org-mode.html][Bernt Hansen's config]]
 [[https://github.com/zzamboni/dot-emacs/blob/master/init.org][ZZamboni, who makes org-mode look nice]]
+
+
+* Custom functions
+*** Narrow or widen command
+  #+BEGIN_SRC emacs-lisp
+  ; if you're windened, narrow to the region, if you're narrowed, widen
+  ; bound to C-x n
+  (defun narrow-or-widen-dwim (p)
+    "If the buffer is narrowed, it widens. Otherwise, it narrows intelligently.
+  Intelligently means: region, org-src-block, org-subtree, or defun,
+  whichever applies first.
+  Narrowing to org-src-block actually calls `org-edit-src-code'.
+
+  With prefix P, don't widen, just narrow even if buffer is already
+  narrowed."
+    (interactive "P")
+    (declare (interactive-only))
+    (cond ((and (buffer-narrowed-p) (not p)) (widen))
+	  ((region-active-p)
+	   (narrow-to-region (region-beginning) (region-end)))
+	  ((derived-mode-p 'org-mode)
+	   ;; `org-edit-src-code' is not a real narrowing command.
+	   ;; Remove this first conditional if you don't want it.
+	   (cond ((ignore-errors (org-edit-src-code))
+		  (delete-other-windows))
+		 ((org-at-block-p)
+		  (org-narrow-to-block))
+		 (t (org-narrow-to-subtree))))
+	  (t (narrow-to-defun))))
+
+  ;; (define-key endless/toggle-map "n" #'narrow-or-widen-dwim)
+  ;; This line actually replaces Emacs' entire narrowing keymap, that's
+  ;; how much I like this command. Only copy it if that's what you want.
+  (define-key ctl-x-map "n" #'narrow-or-widen-dwim)
+  #+END_SRC
 
 
 * Global Settings
@@ -201,7 +236,11 @@
   (use-package dashboard
     :ensure t
     :config
-    (dashboard-setup-startup-hook))
+    (dashboard-setup-startup-hook)
+    (setq dashboard-center-content nil)
+    (setq dashboard-items '((projects . 5)
+			    (agenda . 5)))
+    )
 #+END_SRC
 *** TODO [[https://github.com/jorgenschaefer/elpy][Elpy]]
     Python dev environment for Emacs
@@ -302,40 +341,6 @@ Found in [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][this articl
   [[https://github.com/zzamboni/dot-emacs/blob/master/init.org][Advice on making Org-mode look good for writing]]
 *** Fonts and sizes
 #+BEGIN_SRC emacs-lisp
-  ;; (let* ((variable-tuple
-  ;;        (cond ((x-list-fonts   "Source Sans Pro") '(:font   "Source Sans Pro"))
-  ;; 	     ((x-list-fonts   "Lucida Grande")   '(:font   "Lucida Grande"))
-  ;; 	     ((x-family-fonts "Liberation Serif") '(:family "Liberation Serif"))
-  ;; 	     ((x-list-fonts   "Verdana")         '(:font   "Verdana"))
-  ;; 	     ((x-family-fonts "Sans Serif")      '(:family "Sans Serif"))
-  ;; 	     (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
-  ;;        (base-font-color (face-foreground 'default nil 'default))
-  ;;        (headline       `(:inherit default :weight bold :foreground ,base-font-color)))
-
-  ;;   (custom-theme-set-faces
-  ;;    'user
-  ;;    `(org-level-8        ((t (,@headline ,@variable-tuple))))
-  ;;    `(org-level-7        ((t (,@headline ,@variable-tuple))))
-  ;;    `(org-level-6        ((t (,@headline ,@variable-tuple))))
-  ;;    `(org-level-5        ((t (,@headline ,@variable-tuple))))
-  ;;    `(org-level-4        ((t (,@headline ,@variable-tuple :height 1.1))))
-  ;;    `(org-level-3        ((t (,@headline ,@variable-tuple :height 1.25))))
-  ;;    `(org-level-2        ((t (,@headline ,@variable-tuple :height 1.25))))
-  ;;    `(org-level-1        ((t (,@headline ,@variable-tuple :height 1.25))))
-  ;;    `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline t))))
-  ;;    '(org-block                 ((t (:inherit fixed-pitch))))
-  ;;    '(org-document-info         ((t (:inherit fixed-pitch :foreground "dark orange"))))
-  ;;    '(org-document-info-keyword ((t (:inherit fixed-pitch))))
-  ;;    '(org-link                  ((t (:foreground "royal blue" :underline t))))
-  ;;    '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-  ;;    '(org-property-value        ((t (:inherit fixed-pitch))) t)
-  ;;    '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-  ;;    '(org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
-  ;;    '(org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
-  ;;    )
-  ;; )
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
   (custom-theme-set-faces
      'user
      `(org-level-8        ((t (:inherit default :weight bold :foreground "#f5f5f5"))))
@@ -359,85 +364,23 @@ Found in [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][this articl
      '(org-priority              ((t (:inherit fixed-pitch))))
      '(org-todo                  ((t (:inherit fixed-pitch))))
      '(org-done                  ((t (:inherit fixed-pitch))))
+     '(org-table                 ((t (:inherit fixed-pitch))))
      )
+
+  (setq org-tags-column 0)
 #+END_SRC
 
 #+RESULTS:
+: 0
 
 #+BEGIN_SRC emacs-lisp
   (set-face-attribute 'default nil :family "Office Code Pro" :foreground "#f5f5f5")
   (set-face-attribute 'fixed-pitch nil :family "Office Code Pro")
   (set-face-attribute 'variable-pitch nil :family "Liberation Serif" :height 130)
   (add-hook 'org-mode-hook 'variable-pitch-mode)
-  (add-hook 'org-mode hook 'olivetti-mode)
 #+END_SRC
 
 [[https://ogbe.net/blog/toggle-serif.html][a mix of variable and fixed pitch fonts]]?
-#+BEGIN_SRC emacs-lisp
-  ;; (defvar serif-preserve-default-list nil
-  ;;   "A list holding the faces that preserve the default family and
-  ;;   height when TOGGLE-SERIF is used.")
-
-  ;; (setq serif-preserve-default-list
-  ;;       '(;; LaTeX markup
-  ;; 	font-latex-math-face
-  ;; 	font-latex-sedate-face
-  ;; 	font-latex-warning-face
-  ;; 	;; org markup
-  ;; 	org-latex-and-related
-  ;; 	org-meta-line
-  ;; 	org-verbatim
-  ;; 	org-block-begin-line
-  ;; 	;; syntax highlighting using font-lock
-  ;; 	font-lock-builtin-face
-  ;; 	font-lock-comment-delimiter-face
-  ;; 	font-lock-comment-face
-  ;; 	font-lock-constant-face
-  ;; 	font-lock-doc-face
-  ;; 	font-lock-function-name-face
-  ;; 	font-lock-keyword-face
-  ;; 	font-lock-negation-char-face
-  ;; 	font-lock-preprocessor-face
-  ;; 	font-lock-regexp-grouping-backslash
-  ;; 	font-lock-regexp-grouping-construct
-  ;; 	font-lock-string-face
-  ;; 	font-lock-type-face
-  ;; 	font-lock-variable-name-face
-  ;; 	font-lock-warning-face))
-
-  ;; (defun toggle-serif ()
-  ;;   "Change the default face of the current buffer to use a serif family."
-  ;;   (interactive)
-  ;;   (when (display-graphic-p)  ;; this is only for graphical emacs
-  ;;     ;; the serif font familiy and height, save the default attributes
-  ;;     (let ((serif-fam "Liberation Serif")
-  ;; 	  (serif-height 120)
-  ;; 	  (default-fam (face-attribute 'default :family))
-  ;; 	  (default-height (face-attribute 'default :height)))
-  ;;       (if (not (bound-and-true-p default-cookie))
-  ;; 	  (progn (make-local-variable 'default-cookie)
-  ;; 		 (make-local-variable 'preserve-default-cookies-list)
-  ;; 		 (setq preserve-default-cookies-list nil)
-  ;; 		 ;; remap default face to serif
-  ;; 		 (setq default-cookie
-  ;; 		       (face-remap-add-relative
-  ;; 			'default :family serif-fam :height serif-height))
-  ;; 		 ;; keep previously defined monospace fonts the same
-  ;; 		 (dolist (face serif-preserve-default-list)
-  ;; 		   (add-to-list 'preserve-default-cookies-list
-  ;; 				(face-remap-add-relative
-  ;; 				 face :family default-fam :height default-height)))
-  ;; 		 (message "Turned on serif writing font."))
-  ;; 	;; undo changes
-  ;; 	(progn (face-remap-remove-relative default-cookie)
-  ;; 	       (dolist (cookie preserve-default-cookies-list)
-  ;; 		 (face-remap-remove-relative cookie))
-  ;; 	       (setq default-cookie nil)
-  ;; 	       (setq preserve-default-cookies-list nil)
-  ;; 	       (message "Restored default fonts."))))))
-
-  ;; (add-hook 'org-mode-hook 'toggle-serif)
-#+END_SRC
 
 *** General settings
  #+BEGIN_SRC emacs-lisp
@@ -496,37 +439,3 @@ Found in [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][this articl
  #+END_SRC
 
  #+RESULTS:
-
-
-* Narrow or widen command
-#+BEGIN_SRC emacs-lisp
-; if you're windened, narrow to the region, if you're narrowed, widen
-; bound to C-x n
-(defun narrow-or-widen-dwim (p)
-  "If the buffer is narrowed, it widens. Otherwise, it narrows intelligently.
-Intelligently means: region, org-src-block, org-subtree, or defun,
-whichever applies first.
-Narrowing to org-src-block actually calls `org-edit-src-code'.
-
-With prefix P, don't widen, just narrow even if buffer is already
-narrowed."
-  (interactive "P")
-  (declare (interactive-only))
-  (cond ((and (buffer-narrowed-p) (not p)) (widen))
-	((region-active-p)
-	 (narrow-to-region (region-beginning) (region-end)))
-	((derived-mode-p 'org-mode)
-	 ;; `org-edit-src-code' is not a real narrowing command.
-	 ;; Remove this first conditional if you don't want it.
-	 (cond ((ignore-errors (org-edit-src-code))
-		(delete-other-windows))
-	       ((org-at-block-p)
-		(org-narrow-to-block))
-	       (t (org-narrow-to-subtree))))
-	(t (narrow-to-defun))))
-
-;; (define-key endless/toggle-map "n" #'narrow-or-widen-dwim)
-;; This line actually replaces Emacs' entire narrowing keymap, that's
-;; how much I like this command. Only copy it if that's what you want.
-(define-key ctl-x-map "n" #'narrow-or-widen-dwim)
-#+END_SRC
