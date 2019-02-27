@@ -27,8 +27,8 @@
 [[http://doc.norang.ca/org-mode.html][Bernt Hansen's config]]
 [[https://github.com/zzamboni/dot-emacs/blob/master/init.org][ZZamboni, who makes org-mode look nice]]
 
-
 * Custom functions
+  Most custom functions are defined with the package the go with, but some are more general and are grouped here instead
 *** Narrow or widen command
   #+BEGIN_SRC emacs-lisp
   ; if you're windened, narrow to the region, if you're narrowed, widen
@@ -72,14 +72,18 @@
 (setq display-time-day-and-date 1)
 (display-time-mode 1)
 
-
-
 (fset 'yes-or-no-p 'y-or-n-p)
 (global-set-key (kbd "<f5>") 'revert-buffer)
 
 (defalias 'list-buffers 'ibuffer)
 #+END_SRC
 
+*** Fonts
+#+BEGIN_SRC emacs-lisp
+  (set-face-attribute 'default nil :family "Office Code Pro" :foreground "#f5f5f5")
+  (set-face-attribute 'fixed-pitch nil :family "Office Code Pro")
+  (set-face-attribute 'variable-pitch nil :family "Liberation Serif" :height 130)
+#+END_SRC
 
 
 * Packages
@@ -289,6 +293,15 @@
    ;;   )
 
  #+END_SRC
+*** [[https://github.com/rnkn/olivetti][Olivetti mode]]
+#+BEGIN_SRC emacs-lisp
+  (use-package olivetti
+    :ensure t
+)
+ #+END_SRC
+
+ #+RESULTS:
+ : Text body width set to 100
 
 *** TODO Theme
 ***** [[https://github.com/Greduan/emacs-theme-gruvbox][Gruvbox theme]]
@@ -313,16 +326,6 @@ Found in [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][this articl
       ;;     )
       ;;   ;;(load-theme 'poet-dark t)
 #+END_SRC
-*** [[https://github.com/rnkn/olivetti][Olivetti mode]]
-#+BEGIN_SRC emacs-lisp
-  (use-package olivetti
-    :ensure t
-)
- #+END_SRC
-
- #+RESULTS:
- : Text body width set to 100
-
 *** Line wrapping
  #+BEGIN_SRC emacs-lisp
  (use-package adaptive-wrap
@@ -337,6 +340,21 @@ Found in [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][this articl
 
  
 * Org Mode
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :ensure t
+    :config
+    (
+     (setq org-tags-column 0)
+     (setq org-hide-leading-stars t)
+     (setq org-log-into-drawer t)
+     (setq org-resdisplay-inline-images t)
+     (setq org-startup-with-inline-images "inlineimages")
+     )
+    :hook (variable-pitch-mode)
+    )
+#+END_SRC
+
   [[https://orgmode.org/manual/][The Org Manual]]
   [[https://github.com/zzamboni/dot-emacs/blob/master/init.org][Advice on making Org-mode look good for writing]]
 *** Fonts and sizes
@@ -366,34 +384,12 @@ Found in [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][this articl
      '(org-done                  ((t (:inherit fixed-pitch))))
      '(org-table                 ((t (:inherit fixed-pitch))))
      )
-
-  (setq org-tags-column 0)
 #+END_SRC
 
 #+RESULTS:
 : 0
 
-#+BEGIN_SRC emacs-lisp
-  (set-face-attribute 'default nil :family "Office Code Pro" :foreground "#f5f5f5")
-  (set-face-attribute 'fixed-pitch nil :family "Office Code Pro")
-  (set-face-attribute 'variable-pitch nil :family "Liberation Serif" :height 130)
-  (add-hook 'org-mode-hook 'variable-pitch-mode)
-#+END_SRC
-
 [[https://ogbe.net/blog/toggle-serif.html][a mix of variable and fixed pitch fonts]]?
-
-*** General settings
- #+BEGIN_SRC emacs-lisp
-   (setq org-hide-leading-stars t)
-
-   (setq org-log-into-drawer t)
-
-   (setq org-display-inline-images t)
-   (setq org-redisplay-inline-images t)
-   (setq org-startup-with-inline-images "inlineimages")
-   
- #+END_SRC
-
 *** [[https://github.com/sabof/org-bullets][Org-bullets]]
  #+BEGIN_SRC emacs-lisp
  (use-package org-bullets
