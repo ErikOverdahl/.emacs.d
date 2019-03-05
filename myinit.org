@@ -27,6 +27,7 @@
 [[http://doc.norang.ca/org-mode.html][Bernt Hansen's config]]
 [[https://github.com/zzamboni/dot-emacs/blob/master/init.org][ZZamboni, who makes org-mode look nice]]
 
+
 * Custom functions
   Most custom functions are defined with the package the go with, but some are more general and are grouped here instead
 *** Narrow or widen command
@@ -343,16 +344,13 @@ Found in [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][this articl
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :ensure t
-    :config
-    (
-     (setq org-tags-column 0)
-     (setq org-hide-leading-stars t)
-     (setq org-log-into-drawer t)
-     (setq org-resdisplay-inline-images t)
-     (setq org-startup-with-inline-images "inlineimages")
-     )
     :hook (variable-pitch-mode)
     )
+  ;; For some reason thesee do NOT want to be in the use-package declaration
+  (setq org-tags-column 0)
+  (setq org-hide-leading-stars t)
+  (setq org-log-into-drawer t)
+  (setq org-startup-with-inline-images "inlineimages")
 #+END_SRC
 
   [[https://orgmode.org/manual/][The Org Manual]]
@@ -407,7 +405,8 @@ Found in [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][this articl
 *** Agenda settings
     [[http://doc.norang.ca/org-mode.html#CustomAgendaViews][Good examples of custom agenda views]]
  #+BEGIN_SRC emacs-lisp
-   (setq org-agenda-files (list "~/Dropbox/DropsyncFiles/Org/todo.org"))
+   (setq org-agenda-files (list "~/Dropbox/DropsyncFiles/Org/todo.org"
+				"~/Dropbox/DropsyncFiles/Org/workprojects.org"))
    (global-set-key (kbd "C-c a") 'org-agenda)
  #+END_SRC
 
@@ -430,8 +429,10 @@ Found in [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][this articl
     '((python . t)
       (shell . t)
       (emacs-lisp . t)
-      (ipython . t))
+      (ipython . t)
+      (plantuml . t))
     )
  #+END_SRC
 
  #+RESULTS:
+ 
