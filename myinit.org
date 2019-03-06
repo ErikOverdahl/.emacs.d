@@ -432,7 +432,11 @@ Found in [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][this articl
       (ipython . t)
       (plantuml . t))
     )
+
+   (setq org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar")
+   ;; Use fundamental mode when editing plantuml blocks
+   (add-to-list 'org-src-lang-modes (quote ("plantuml" . fundamental)))
  #+END_SRC
 
  #+RESULTS:
- 
+ : ((plantuml . fundamental) (jupyter-python . python) (ipython . python) (ocaml . tuareg) (elisp . emacs-lisp) (ditaa . artist) (asymptote . asy) (dot . fundamental) (sqlite . sql) (calc . fundamental) (C . c) (cpp . c++) (C++ . c++) (screen . shell-script) (shell . sh) (bash . sh))
