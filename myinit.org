@@ -238,14 +238,14 @@
 : projectile-command-map
 *** TODO [[https://github.com/emacs-dashboard/emacs-dashboard][Dashboard]]
 #+BEGIN_SRC emacs-lisp
-  (use-package dashboard
-    :ensure t
-    :config
-    (dashboard-setup-startup-hook)
-    (setq dashboard-center-content nil)
-    (setq dashboard-items '((projects . 5)
-			    (agenda . 5)))
-    )
+  ;; (use-package dashboard
+  ;;   :ensure t
+  ;;   :config
+  ;;   (dashboard-setup-startup-hook)
+  ;;   (setq dashboard-center-content nil)
+  ;;   (setq dashboard-items '((projects . 5)
+  ;; 			  (agenda . 5)))
+  ;;   )
 #+END_SRC
 *** TODO [[https://github.com/jorgenschaefer/elpy][Elpy]]
     Python dev environment for Emacs

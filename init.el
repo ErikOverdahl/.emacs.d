@@ -35,7 +35,7 @@
      org-babel-result-hide-spec org-babel-hide-all-hashes)))
  '(package-selected-packages
    (quote
-    (org-bullets adaptive-wrap olivetti gruvbox-theme ob-ipython elpy dashboard projectile magit counsel smartparens rainbow-delimiters org-pdfview pdf-tools iedit ace-window try which-key use-package))))
+    (org-bullets adaptive-wrap olivetti gruvbox-theme ob-ipython elpy dashboard magit counsel smartparens rainbow-delimiters org-pdfview pdf-tools iedit ace-window try which-key use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
