@@ -225,13 +225,13 @@
  #+END_SRC
 *** TODO [[https://github.com/bbatsov/projectile][Projectile]]
 #+BEGIN_SRC emacs-lisp
-  (use-package projectile
-    :ensure t
-    :bind
-    ("C-c p" . projectile-command-map)
-    :config
-    (projectile-global-mode)
-    (setq projectile-completion-mode 'ivy))
+  ;; (use-package projectile
+  ;;   :ensure t
+  ;;   :bind
+  ;;   ("C-c p" . projectile-command-map)
+  ;;   :config
+  ;;   (projectile-global-mode)
+  ;;   (setq projectile-completion-mode 'ivy))
 #+END_SRC
 
 #+RESULTS:
