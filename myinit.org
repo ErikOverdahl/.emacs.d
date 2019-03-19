@@ -327,6 +327,14 @@ Found in [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][this articl
       ;;     )
       ;;   ;;(load-theme 'poet-dark t)
 #+END_SRC
+*** [[https://github.com/Malabarba/smart-mode-line][Smart Mode Line]]
+#+BEGIN_SRC emacs-lisp
+  (use-package smart-mode-line
+    :ensure t
+    :config
+    (setq sml/theme 'dark)
+    (sml/setup))
+#+END_SRC
 *** Line wrapping
  #+BEGIN_SRC emacs-lisp
  (use-package adaptive-wrap
