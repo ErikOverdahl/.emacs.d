@@ -1,5 +1,12 @@
-*
-
-!init.el
-!myinit.org
-!inits/*
+*~
+auto-save-list/
+elpa/
+snippets/
+transient/
+recentf
+myinit.el
+org-clock-save.el
+projectile-bookmarks.eld
+*#
+.gitignore
+.org-id-locations
