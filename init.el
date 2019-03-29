@@ -1,3 +1,6 @@
+(setq custom-file "~/.emacs.d/inits/init-custom.el")
+(load 'custom-file)
+
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
@@ -11,9 +14,6 @@
 (unless (package-installed-p 'use-package)
 	(package-refresh-contents)
 	(package-install 'use-package))
-
-(org-babel-load-file (expand-file-name "~/.emacs.d/myinit.org"))
-
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

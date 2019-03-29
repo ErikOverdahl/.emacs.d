@@ -5,3 +5,5 @@
   (sml/setup)
   (setq display-time-day-and-date 1)
   (display-time-mode 1))
+
+(provide 'init-modeline)

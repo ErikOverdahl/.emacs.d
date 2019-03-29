@@ -9,8 +9,4 @@
   :config
   (load-theme 'gruvbox-dark-hard t))
 
-(use-package smart-mode-line
-  :ensure t
-  :config
-  (setq sml/theme 'dark)
-  (sml/setup))
+(provide 'init-gui)
