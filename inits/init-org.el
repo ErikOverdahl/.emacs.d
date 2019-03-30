@@ -56,5 +56,4 @@
 ;; Use fundamental mode when editing plantuml blocks
 (add-to-list 'org-src-lang-modes (quote ("plantuml" . fundamental)))
 
-
 (provide 'init-org)
