@@ -36,7 +36,7 @@
     ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
  '(package-selected-packages
    (quote
-    (which-key use-package try smartparens smart-mode-line rainbow-delimiters projectile org-pdfview org-bullets olivetti ob-ipython magit iedit gruvbox-theme elpy dashboard counsel adaptive-wrap ace-window))))
+    (jupyter which-key use-package try smartparens smart-mode-line rainbow-delimiters projectile org-pdfview org-bullets olivetti ob-ipython magit iedit gruvbox-theme elpy dashboard counsel adaptive-wrap ace-window))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

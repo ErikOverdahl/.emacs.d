@@ -35,10 +35,10 @@
 (require 'init-line-wrapping)
 (require 'init-counsel)
 (require 'init-magit)
-(require 'init-org)
 (require 'init-elpy)             
 ;;(require 'init-obipython)        
 (require 'init-jupyter)
 (require 'init-pdf-tools)       
+(require 'init-org)
 
 (emacs-init-time)
