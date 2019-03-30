@@ -37,7 +37,8 @@
 (require 'init-magit)
 (require 'init-org)
 (require 'init-elpy)             
-(require 'init-obipython)        
+;;(require 'init-obipython)        
+(require 'init-jupyter)
 (require 'init-pdf-tools)       
 
 (emacs-init-time)
