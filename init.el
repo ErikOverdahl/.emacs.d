@@ -26,13 +26,17 @@
 
 (require 'init-gui)
 (require 'init-global)
+
+;; Packages
 (require 'init-modeline)
-(require 'init-small-packages.el)
-(require 'init-acewindow.el)
-(require 'init-iedit-smartparens.el)
-(require 'init-line-wrapping.el)
-(require 'init-counsel.el)
-(require 'init-magit.el)
-(require 'init-elpy.el)             
-(require 'init-obipython.el)        
-(require 'init-pdf-tools.el)       
+(require 'init-acewindow)
+(require 'init-small-packages)
+(require 'init-iedit-smartparens)
+(require 'init-line-wrapping)
+(require 'init-counsel)
+(require 'init-magit)
+(require 'init-elpy)             
+(require 'init-obipython)        
+(require 'init-pdf-tools)       
+
+(emacs-init-time)

@@ -31,4 +31,4 @@
     (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
     ))
 
-(provide 'init-ivy-counsel)
+(provide 'init-counsel)
