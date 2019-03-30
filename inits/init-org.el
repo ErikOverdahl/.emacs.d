@@ -35,8 +35,8 @@
  '((python . t)
    (shell . t)
    (emacs-lisp . t)
-   (ipython . t)
-   (plantuml . t))
+   (plantuml . t)
+   (jupyter . t))
  )
 
 (setq org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar")
