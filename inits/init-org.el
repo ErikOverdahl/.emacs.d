@@ -4,6 +4,19 @@
 (setq org-startup-with-inline-images "inlineimages")
 (setq org-odd-levels-only t)
 
+(setq org-mode-hook nil)
+(add-hook 'org-mode-hook 'variable-pitch-mode)
+(defun init-org-keybindings ()
+      (local-set-key "\M-n" 'outline-next-visible-heading)
+      (local-set-key "\M-p" 'outline-previous-visible-heading)
+      ;; table
+      (local-set-key "\C-\M-w" 'org-table-copy-region)
+      (local-set-key "\C-\M-y" 'org-table-paste-rectangle)
+      (local-set-key "\C-\M-l" 'org-table-sort-lines)
+      ;; display images
+      (local-set-key "\M-I" 'org-toggle-iimage-in-org))
+(add-hook 'org-mode-hook 'init-org-keybindings)
+
 (use-package org-bullets
   :ensure t
   :config
@@ -12,9 +25,6 @@
         '("◉" "●" "○" "◦" "◦" "◦" "◦"))
 
 ;; TODO states
-(setq org-todo-keywords
-      '((sequence "TODO" "NEXT" "|" "DONE")
-        (sequence "EVENT" "|" "FINISHED")))
 (setq org-todo-keyword-faces
       '(("NEXT" :foreground "dodger blue" :inherit fixed-pitch)
         ("EVENT" :foreground "DarkGoldenrod1" :inherit fixed-pitch)))
@@ -31,14 +41,6 @@
         ("W" "Work Projects")
         )
       )
-
-;; Time tracking
-(require 'org-id)
-(setq org-id-link-to-org-use-id t)
-
-(defun fr/org-id-add-ids-to-headlines ()
-  (interactive)
-  (org-map-entries (lambda)))
 
 ;; Org-Babel
 (setq exec-path (append exec-path '("/home/francis/Programs/anaconda3/bin")))

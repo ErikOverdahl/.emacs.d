@@ -1,3 +1,8 @@
+;; Setting fonts
+(set-face-attribute 'default nil :family "Office Code Pro" :foreground "#f5f5f5")
+(set-face-attribute 'fixed-pitch nil :family "Office Code Pro")
+(set-face-attribute 'variable-pitch nil :family "Liberation Serif" :height 130)
+
 
 ;; Put backup files in their own directory instead of cluttering
 ;; directories with '~' files all over the place
@@ -34,7 +39,6 @@
 (mouse-avoidance-mode 'banish)                    ; Avoid collision of mouse with point
 (put 'downcase-region 'disabled nil)              ; Enable downcase-region
 (put 'upcase-region 'disabled nil)                ; Enable upcase-region
-(set-default-coding-systems 'utf-8)               ; Default to utf-8 encoding
 
 ; if you're windened, narrow to the region, if you're narrowed, widen
 ; bound to C-x n

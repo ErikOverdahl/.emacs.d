@@ -35,6 +35,7 @@
 (require 'init-line-wrapping)
 (require 'init-counsel)
 (require 'init-magit)
+(require 'init-org)
 (require 'init-elpy)             
 (require 'init-obipython)        
 (require 'init-pdf-tools)       
