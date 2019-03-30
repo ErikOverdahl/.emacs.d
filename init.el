@@ -39,5 +39,6 @@
 (require 'init-elpy)             
 (require 'init-obipython)        
 (require 'init-pdf-tools)       
+(require 'init-projectile)
 
 (emacs-init-time)
