@@ -4,23 +4,8 @@
 (setq org-startup-with-inline-images "inlineimages")
 (setq org-odd-levels-only t)
 
-(setq org-mode-hook nil)
-(add-hook 'org-mode-hook 'variable-pitch-mode)
-(defun init-org-keybindings ()
-      (local-set-key "\M-n" 'outline-next-visible-heading)
-      (local-set-key "\M-p" 'outline-previous-visible-heading)
-      ;; table
-      (local-set-key "\C-\M-w" 'org-table-copy-region)
-      (local-set-key "\C-\M-y" 'org-table-paste-rectangle)
-      (local-set-key "\C-\M-l" 'org-table-sort-lines)
-      ;; display images
-      (local-set-key "\M-I" 'org-toggle-iimage-in-org))
-(add-hook 'org-mode-hook 'init-org-keybindings)
-
 (use-package org-bullets
-  :ensure t
-  :config
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+  :ensure t)
 (setq org-bullets-bullet-list
         '("◉" "●" "○" "◦" "◦" "◦" "◦"))
 
@@ -57,5 +42,40 @@
 (setq org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar")
 ;; Use fundamental mode when editing plantuml blocks
 (add-to-list 'org-src-lang-modes (quote ("plantuml" . fundamental)))
+
+;; Function for toggling header sizes
+(defun fr/org-reading-mode-toggle ()
+  (interactive)
+  (if (get 'fr/org-reading-mode-toggle 'state)
+      (progn
+        (custom-theme-set-faces
+         'user
+         '(org-level-1 ((t (:inherit default :weight bold :foreground "#f5f5f5"))))
+         '(org-level-2 ((t (:inherit default :weight bold :foreground "#f5f5f5"))))
+         '(org-level-3 ((t (:inherit default :weight bold :foreground "#f5f5f5"))))
+         '(org-level-4 ((t (:inherit default :weight bold :foreground "#f5f5f5")))))
+        (put 'fr/org-reading-mode-toggle 'state nil))
+    (progn
+      (custom-theme-set-faces
+       'user
+       '(org-level-1 ((t (:inherit default :weight bold :height 1.5   :foreground "#f5f5f5"))))
+       '(org-level-2 ((t (:inherit default :weight bold :height 1.375 :foreground "#f5f5f5"))))
+       '(org-level-3 ((t (:inherit default :weight bold :height 1.25  :foreground "#f5f5f5"))))
+       '(org-level-4 ((t (:inherit default :weight bold :height 1.125 :foreground "#f5f5f5")))))
+      (put 'fr/org-reading-mode-toggle 'state t))))
+
+(setq org-mode-hook nil)
+(add-hook 'org-mode-hook 'variable-pitch-mode)
+(defun init-org-keybindings ()
+      (local-set-key "\M-n" 'outline-next-visible-heading)
+      (local-set-key "\M-p" 'outline-previous-visible-heading)
+      ;; table
+      (local-set-key "\C-\M-w" 'org-table-copy-region)
+      (local-set-key "\C-\M-y" 'org-table-paste-rectangle)
+      (local-set-key "\C-\M-l" 'org-table-sort-lines)
+      ;; heading size toggle
+      (local-set-key "\C-\M-r" 'fr/org-reading-mode-toggle))
+(add-hook 'org-mode-hook 'init-org-keybindings)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
 (provide 'init-org)
