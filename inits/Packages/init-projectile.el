@@ -1,3 +1,8 @@
+(use-package perspective
+  :ensure t
+  :config
+  (persp-mode))
+
 (use-package projectile
   :ensure t
   :defer 1
@@ -10,8 +15,13 @@
   :config
   (projectile-global-mode 1)
   (setq-default
-   projectile-completion-system 'helm
+   projectile-completion-system 'ivy
    projectile-enable-caching t
    projectile-mode-line '(:eval (projectile-project-name))))
+
+(use-package persp-projectile
+  :ensure t)
+
+(define-key projectile-mode-map (kbd "C-c C-p C-p") 'projectile-persp-switch-project)
 
 (provide 'init-projectile)
