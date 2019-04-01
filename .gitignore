@@ -3,6 +3,7 @@ auto-save-list/
 elpa/
 snippets/
 transient/
+eshell/
 recentf
 myinit.el
 org-clock-save.el
@@ -10,3 +11,4 @@ projectile-bookmarks.eld
 *#
 .gitignore
 .org-id-locations
+bare_init.el
