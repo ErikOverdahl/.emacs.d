@@ -11,4 +11,6 @@ projectile-bookmarks.eld
 *#
 .gitignore
 .org-id-locations
+.projectile*
 bare_init.el
+forge*
