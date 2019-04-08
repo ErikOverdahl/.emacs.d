@@ -41,5 +41,6 @@
 (require 'init-pdf-tools)       
 (require 'init-projectile)
 (require 'init-org)
+(require 'init-org-capture)
 
 (emacs-init-time)
