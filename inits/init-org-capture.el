@@ -31,7 +31,7 @@
 	("p" "Protocol" entry (file+headline ,(concat org-directory "links.org") "Inbox")
         "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")	
     ("L" "Protocol Link" entry (file+headline ,(concat org-directory "links.org") "Inbox")
-     "* %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\nCaptured On: %U"
+     "* \n\t[[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n\tCaptured On: %U"
      :empty-lines 1)
     ))
 

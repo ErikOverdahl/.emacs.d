@@ -28,14 +28,16 @@
       )
 
 ;; Org-Babel
-(setq exec-path (append exec-path '("/home/francis/Programs/anaconda3/bin")))
+;; (setq exec-path (append exec-path '("/home/francis/Programs/anaconda3/bin")))
 
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((python . t)
+   (scheme . t)
    (shell . t)
    (emacs-lisp . t)
    (plantuml . t)
+   (R . t)
    (jupyter . t))
  )
 
@@ -65,7 +67,7 @@
       (put 'fr/org-reading-mode-toggle 'state t))))
 
 (setq org-mode-hook nil)
-(add-hook 'org-mode-hook 'variable-pitch-mode)
+;; (add-hook 'org-mode-hook 'variable-pitch-mode)
 (defun init-org-keybindings ()
       (local-set-key "\M-n" 'outline-next-visible-heading)
       (local-set-key "\M-p" 'outline-previous-visible-heading)
